@@ -1,0 +1,46 @@
+
+function main(workbook: ExcelScript.Workbook) {
+    // Pobierz komórkę aktywną i arkusz.
+    let selectedSheet = workbook.getActiveWorksheet();
+    let columnARange = selectedSheet.getUsedRange(true).getValues();
+   
+    let emptyArray: number[] = [];
+
+    for (let i = 0; i < columnARange.length; i++) {
+        let cellValue = columnARange[i][0];
+      if (cellValue !== null && cellValue !== undefined && cellValue !== "") {
+        if ((i + 1) % 3 === 0) {
+          emptyArray.push(cellValue);
+        }
+      } else {
+        break; // Exit the loop when an empty cell is encountered
+      }
+    }
+  console.log(emptyArray);
+
+  let xArray: number[] = [];
+  let yArray: number[] = [];
+  let start_savingX = selectedSheet.getRange('D1')
+  let start_savingY = selectedSheet.getRange('E1')
+  for (let i = 0; i < emptyArray.length; i++){
+    start_savingY.getOffsetRange(i,0).setValue(i+1)
+    start_savingX.getOffsetRange(i, 0).setValue(emptyArray[i])
+  }
+
+  let n = 1
+  for (let i = 1; i < emptyArray.length+1; i++){
+  let x_range = "D1"+":D"+i.toString();
+    console.log(x_range);
+  let chat = selectedSheet.addChart(ExcelScript.ChartType.lineMarkers, selectedSheet.getRange(x_range));
+
+  let pos = 'D'+n.toString()
+  console.log(pos)
+  chat.setPosition(pos)
+    n = n + 10
+  chat.setHeight(180)
+  chat.setWidth(260)
+}
+
+
+}
+    
